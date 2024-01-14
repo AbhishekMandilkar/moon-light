@@ -11,7 +11,7 @@ import LoginSignUp from "@/components/LoginSignUp/LoginSignUp";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { fontSans } from "./fonts";
-import ThemeToggle from "@/components/common/ThemeToggle";
+import ThemeToggle from "@/components/Common/ThemeToggle";
 import { Loader2 } from "lucide-react";
 
 const RootLayout = ({ children }: React.PropsWithChildren) => {

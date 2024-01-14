@@ -11,9 +11,9 @@ import Link from "next/link";
 import { useTheme } from "next-themes";
 import { Tooltip, TooltipProvider } from "../ui/tooltip";
 import { TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
-import ThemeToggle from "../common/ThemeToggle";
+import ThemeToggle from "../Common/ThemeToggle";
 import ActionBar from "./ActionBar";
-import BrandLogo from "../common/BrandLogo";
+import BrandLogo from "../Common/BrandLogo";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 

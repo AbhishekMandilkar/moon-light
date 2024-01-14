@@ -1,7 +1,7 @@
 "use client";
 import { LogOut, User } from "lucide-react";
 import React from "react";
-import ThemeToggle from "../common/ThemeToggle";
+import ThemeToggle from "../Common/ThemeToggle";
 import { Button } from "../ui/button";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
