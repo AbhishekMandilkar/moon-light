@@ -9,9 +9,9 @@ import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "../ui/button";
 import { UserAuthForm } from "./components/UserAuthForm";
 import { toast } from "sonner";
-import BrandLogo from "../common/BrandLogo";
 import { motion } from "framer-motion";
 import ThemeToggle from "../common/ThemeToggle";
+import BrandLogo from "../common/BrandLogo";
 const LoginSignUp: React.FC = () => {
   const router = useRouter();
   const authContext = useContext(AuthContext);
