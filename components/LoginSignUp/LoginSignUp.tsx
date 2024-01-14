@@ -72,7 +72,6 @@ const LoginSignUp: React.FC = () => {
       <div className="container relative h-screen flex flex-col items-center justify-center transition-all ease-in duration-200">
         <span className="absolute left-4 top-4 md:left-8 md:top-8">
           <BrandLogo />
-          {process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID}
         </span>
         <span className="absolute right-4 top-4 md:right-8 md:top-8 flex items-center">
           <Button
