@@ -1,22 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Inter } from "next/font/google";
-
-import StyledComponentsRegistry from "@/lib/AntdRegistry";
 
 import "./globals.css";
-import ThemeProvider from "@/components/ThemeProvider";
+import ThemeProvider from "@/components/theme-provider";
 import { usePathname, useRouter } from "next/navigation";
 import useAuth, { AuthProvider } from "@/contexts/AuthContext";
 import appwriteService from "@/services/appwrite";
 import { Models } from "appwrite";
-import { Spin } from "antd";
-import LoginSignUp from "@/components/LoginSignUp/LoginSignUp";
-
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-});
+import LoginSignUp from "@/components/login-sign-up/LoginSignUp";
+import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/sonner";
+import { fontSans } from "./fonts";
+import ThemeToggle from "@/components/common/ThemeToggle";
+import { Loader2 } from "lucide-react";
 
 const RootLayout = ({ children }: React.PropsWithChildren) => {
   const [authData, setAuthData] =
@@ -29,7 +25,7 @@ const RootLayout = ({ children }: React.PropsWithChildren) => {
     setLoader(false);
     if (loggedInData) {
       setAuthData(loggedInData);
-    };
+    }
   };
 
   useEffect(() => {
@@ -37,19 +33,30 @@ const RootLayout = ({ children }: React.PropsWithChildren) => {
   }, []);
 
   const renderMainView = () => (!!authData ? children : <LoginSignUp />);
-
   return (
-    <html lang="en" className={`${inter.className}`}>
-      <body className="font-sans">
-        <StyledComponentsRegistry>
-          <ThemeProvider>
-            <AuthProvider
-              value={{ setAuthData: setAuthData, authData: authData }}
-            >
-              {loader ? <Spin /> : renderMainView()}
-            </AuthProvider>
-          </ThemeProvider>
-        </StyledComponentsRegistry>
+    <html lang="en">
+      <body
+        className={`${fontSans.variable} min-h-screen bg-background font-sans antialiased transition-all`}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AuthProvider
+            value={{ setAuthData: setAuthData, authData: authData }}
+          >
+            {loader ? (
+              <div className="w-max h-screen mx-auto items-center flex">
+                <Loader2 className="animate-spin" size={50} />
+              </div>
+            ) : (
+              renderMainView()
+            )}
+            <Toaster position="top-center" />
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

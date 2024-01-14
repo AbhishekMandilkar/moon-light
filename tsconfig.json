@@ -6,7 +6,8 @@
     "target": "es5",
     "lib": [
       "es6",
-      "dom"
+      "dom",
+      "dom.iterable" // <- there you are
     ],
     "allowJs": true,
     "checkJs": true,

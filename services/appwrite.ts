@@ -53,7 +53,9 @@ export class AppwriteService {
     try {
       const data = await this.getCurrentUser();
       return data;
-    } catch (error) {}
+    } catch (error) {
+      console.log("isLoggedIn error: " + error);
+    }
 
     return null;
   }

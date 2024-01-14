@@ -1,9 +1,6 @@
 "use client";
-import SideBar from "@/components/SideBar/SideBar";
+import { Sidebar } from "@/components/side-bar/SideBar";
 import useAuth from "@/contexts/AuthContext";
-import { Layout } from "antd";
-import Sider from "antd/es/layout/Sider";
-import { Content } from "antd/es/layout/layout";
 import { useRouter } from "next/navigation";
 
 import React, { useState } from "react";
@@ -14,38 +11,20 @@ const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <Layout
-      style={{
-        minHeight: "100vh",
-      }}
-    >
-      <Sider
-        trigger={null}
-        collapsible
-        collapsed={collapsed}
-        theme="light"
-        style={{ backgroundClip: "white", width: 256 }}
-        width={256}
-        collapsedWidth={68}
-        breakpoint='lg'
-        onBreakpoint={(broken) => setCollapsed(broken)}
-      >
-        <SideBar
-          collapsed={collapsed}
-          onCollapse={() => setCollapsed(!collapsed)}
-        />
-      </Sider>
-      <Layout>
-        <Content
-          style={{
-            padding: 24,
-            minHeight: 280,
-          }}
-        >
-          {children}
-        </Content>
-      </Layout>
-    </Layout>
+    <>
+      <div className="hidden md:block">
+        <div className="border-t">
+          <div className="bg-background">
+            <div className="grid lg:grid-cols-6">
+              <Sidebar className="hidden lg:block h-screen" />
+              <div className="col-span-5 lg:col-span-4 lg:border-l">
+                <div className="h-full px-4 py-6 lg:px-8">{children}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
