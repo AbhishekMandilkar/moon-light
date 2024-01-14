@@ -2,12 +2,12 @@
 import React, { useEffect, useState } from "react";
 
 import "./globals.css";
-import ThemeProvider from "@/components/theme-provider";
+import ThemeProvider from "@/components/ThemeProvider";
 import { usePathname, useRouter } from "next/navigation";
 import useAuth, { AuthProvider } from "@/contexts/AuthContext";
 import appwriteService from "@/services/appwrite";
 import { Models } from "appwrite";
-import LoginSignUp from "@/components/login-sign-up/LoginSignUp";
+import LoginSignUp from "@/components/LoginSignUp/LoginSignUp";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { fontSans } from "./fonts";

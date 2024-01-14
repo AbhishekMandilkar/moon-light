@@ -1,5 +1,5 @@
 "use client";
-import { Sidebar } from "@/components/side-bar/SideBar";
+import { Sidebar } from "@/components/SideBar/SideBar";
 import useAuth from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 
