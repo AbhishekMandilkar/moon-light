@@ -13,8 +13,10 @@ import { Toaster } from "@/components/ui/sonner";
 import { fontSans } from "./fonts";
 import ThemeToggle from "@/components/Common/ThemeToggle";
 import { Loader2 } from "lucide-react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const RootLayout = ({ children }: React.PropsWithChildren) => {
+  const [queryClient] = React.useState(() => new QueryClient());
   const [authData, setAuthData] =
     useState<Models.User<Models.Preferences> | null>(null);
   const [loader, setLoader] = useState(true);
@@ -47,14 +49,16 @@ const RootLayout = ({ children }: React.PropsWithChildren) => {
           <AuthProvider
             value={{ setAuthData: setAuthData, authData: authData }}
           >
-            {loader ? (
-              <div className="w-max h-screen mx-auto items-center flex">
-                <Loader2 className="animate-spin" size={50} />
-              </div>
-            ) : (
-              renderMainView()
-            )}
-            <Toaster position="top-center" />
+            <QueryClientProvider client={queryClient}>
+              {loader ? (
+                <div className="w-max h-screen mx-auto items-center flex">
+                  <Loader2 className="animate-spin" size={50} />
+                </div>
+              ) : (
+                renderMainView()
+              )}
+              <Toaster position="top-center" />
+            </QueryClientProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

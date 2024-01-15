@@ -14,8 +14,8 @@ export interface ITabs {
 export const getAvailableTabs = () => {
   const tabList: ITabs[] = [];
   tabList.push({
-    path: "/todo",
-    name: "Todo",
+    path: "/tasks",
+    name: "Tasks",
     icon: (isActive, props) => <ListChecks {...props} />,
   });
   tabList.push({

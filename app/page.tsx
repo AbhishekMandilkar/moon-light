@@ -8,7 +8,7 @@ import LoginSignUp from "@/components/LoginSignUp/LoginSignUp";
 
 const Page = () => {
   const router = useRouter();
-  router.replace('/todo')
+  router.replace('/tasks')
   return <></>;
 };
 
