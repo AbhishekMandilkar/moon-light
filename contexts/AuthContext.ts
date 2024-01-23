@@ -3,11 +3,11 @@ import { Models } from "appwrite";
 import { createContext } from "react";
 
 export const AuthContext = createContext<{
-  authData: LoggedInUser | null;
-  setAuthData: (data: LoggedInUser | null) => void;
+  authData: LoggedInUser;
+  setAuthData: (data: LoggedInUser) => void;
 }>({
   setAuthData: () => {},
-  authData: null,
+  authData: {} as LoggedInUser,
 });
 
 export const AuthProvider = AuthContext.Provider;

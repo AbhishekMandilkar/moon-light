@@ -7,7 +7,7 @@ enum Theme {
   Dark = "dark",
 }
 
-function ThemeToggle() {
+function ThemeToggle(props: { className?: string }) {
   const { theme, setTheme, systemTheme } = useTheme();
   return (
     <>
@@ -16,7 +16,11 @@ function ThemeToggle() {
           setTheme(theme === Theme.Light ? Theme.Dark : Theme.Light)
         }
       >
-        {theme === Theme.Light ? <Moon /> : <Sun />}
+        {theme === Theme.Light ? (
+          <Moon className={props?.className} />
+        ) : (
+          <Sun className={props?.className} />
+        )}
       </button>
     </>
   );

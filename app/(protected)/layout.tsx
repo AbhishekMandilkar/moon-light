@@ -1,4 +1,6 @@
 "use client";
+import AppHeader from "@/components/AppHeader/AppHeader";
+import GlobalActionsWrapper from "@/components/GlobalActionsWrapper/GlobalActionsWrapper";
 import { Sidebar } from "@/components/SideBar/SideBar";
 import useAuth from "@/contexts/AuthContext";
 import { useScreenDetector } from "@/lib/hooks/useScreenDetector";
@@ -12,15 +14,18 @@ const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
 
   const { isTablet } = useScreenDetector();
   return (
-    <>
+    <GlobalActionsWrapper>
       <div className="md:block bg-background">
         <div className="flex  h-screen">
           <Sidebar
-            className="hidden lg:block flex-none border-r-2 w-72"
+            className="hidden lg:block flex-none border-r-2 w-54"
             key={"web"}
           />
           <div className="flex-1 overflow-y-scroll">
-            <div className="h-full px-4 py-6 lg:px-8">{children}</div>
+            <div className="h-full">
+             <AppHeader />
+              <div className=" px-4 py-3 lg:px-8">{children}</div>
+            </div>
           </div>
           {isTablet && (
             <Sidebar
@@ -31,7 +36,7 @@ const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
           )}
         </div>
       </div>
-    </>
+    </GlobalActionsWrapper>
   );
 };
 

@@ -1,4 +1,7 @@
-import { Client, Account, ID, Models } from "appwrite";
+import { Client, Account, ID } from "appwrite";
+import supabase from "./supabase";
+import axios from "axios";
+import { users } from "@prisma/client";
 
 export const client = new Client();
 client
@@ -19,7 +22,7 @@ type LoginUserAccount = {
   password: string;
 };
 
-export type LoggedInUser = Models.User<Models.Preferences>;
+export type LoggedInUser = users;
 
 export class AppwriteService {
   //create a new record of user inside appwrite
@@ -32,7 +35,13 @@ export class AppwriteService {
         name
       );
       if (userAccount) {
-        return this.login({ email, password });
+        try {
+          console.log("userAccount: " + JSON.stringify(userAccount));
+          await axios.post("/api/user", userAccount);
+          return this.login({ email, password });
+        } catch (error: any) {
+          account.deleteIdentity(userAccount.$id);
+        }
       } else {
         return userAccount;
       }
@@ -51,8 +60,27 @@ export class AppwriteService {
 
   async isLoggedIn(): Promise<LoggedInUser | null> {
     try {
-      const data = await this.getCurrentUser();
-      return data;
+      // const data = await this.getCurrentUser();
+      const data = {
+        $id: "65abc92ea14f94be38ab",
+        $createdAt: "2024-01-20T13:22:54.662+00:00",
+        $updatedAt: "2024-01-20T13:22:54.662+00:00",
+        name: "@peduarte",
+        registration: "2024-01-20T13:22:54.660+00:00",
+        status: true,
+        labels: [],
+        passwordUpdate: "2024-01-20T13:22:54.660+00:00",
+        email: "abhi123@gmail.com",
+        phone: "",
+        emailVerification: false,
+        phoneVerification: false,
+        prefs: {},
+        accessedAt: "2024-01-20T13:22:54.660+00:00",
+      };
+      const userData = await axios.get<LoggedInUser>(
+        `/api/user?id=${data.$id}`
+      );
+      return userData.data;
     } catch (error) {
       console.log("isLoggedIn error: " + error);
     }

@@ -1,11 +1,11 @@
+import { tasks } from "@prisma/client";
+
 export type ITasksDispatchContext = React.Dispatch<{
   type: string;
   payload: any;
 }> | null;
 
-
-export interface ITasksContext {
-  taskList: any[];
+export interface ITasksConfig {
   viewType: TaskViewType;
   filters: {
     status?: string;
@@ -29,26 +29,17 @@ export enum TaskViewType {
 }
 
 export enum TaskStatus {
-  todo = "todo",
-  inprogress = "inprogress",
-  done = "done",
+  none = "None",
+  todo = "Todo",
+  inprogress = "In Progress",
+  done = "Done",
 }
 
 export enum TaskPriority {
-  low = "low",
-  medium = "medium",
-  high = "high",
+  none = "None",
+  low = "Low",
+  medium = "Medium",
+  high = "High",
 }
 
-
-
-export interface ITask {
-  id: string;
-  title: string;
-  description: string;
-  status: TaskStatus;
-  priority: TaskPriority;
-  dueDate: string;
-  createdAt: string;
-  updatedAt: string;
-}
+export type ITask = tasks;

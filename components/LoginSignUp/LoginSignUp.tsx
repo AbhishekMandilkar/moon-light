@@ -1,4 +1,5 @@
 "use client";
+import {RegisterLink, LoginLink} from "@kinde-oss/kinde-auth-nextjs/components";
 import React, { useContext, useState } from "react";
 import Image from "next/image";
 import appwriteService from "@/services/appwrite";
@@ -30,7 +31,7 @@ const LoginSignUp: React.FC = () => {
       const session = await appwriteService.login(data);
       if (session) {
         const data = await appwriteService.isLoggedIn();
-        authContext.setAuthData(data);
+        // authContext.setAuthData(data);
         setComponentState((prev) => ({ ...prev, loading: false }));
         router.push("/");
       }
@@ -57,7 +58,7 @@ const LoginSignUp: React.FC = () => {
       });
       if (userData) {
         const data = await appwriteService.isLoggedIn();
-        authContext.setAuthData(data);
+        // authContext.setAuthData(data);
         setComponentState((prev) => ({ ...prev, loading: false }));
         router.push("/home");
       }
@@ -69,7 +70,7 @@ const LoginSignUp: React.FC = () => {
 
   return (
     <>
-      <div className="container relative h-screen flex flex-col items-center justify-center transition-all ease-in duration-200">
+      {/* <div className="container relative h-screen flex flex-col items-center justify-center transition-all ease-in duration-200">
         <span className="absolute left-4 top-4 md:left-8 md:top-8">
           <BrandLogo />
         </span>
@@ -124,7 +125,11 @@ const LoginSignUp: React.FC = () => {
             </p>
           </div>
         </div>
-      </div>
+      </div> */}
+
+<LoginLink>Sign in</LoginLink>
+
+<RegisterLink>Sign up</RegisterLink>
     </>
   );
 };

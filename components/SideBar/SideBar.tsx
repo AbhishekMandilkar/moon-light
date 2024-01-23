@@ -32,20 +32,20 @@ export function Sidebar({ className, isMobile }: SidebarProps) {
     const isActive = isTabActive(tab.path);
     return (
       <Link
-        key={`${tab}-${i}`}
+        key={`${tab.name}-${i}`}
         href={tab.path}
         passHref
-        className={`flex items-center px-4 py-2 rounded-md text-sm lg:text-base relative no-underline duration-300 ease-in mb-2 bg-transparent z-10`}
+        className={`flex items-center px-3 py-2 rounded-md text-sm lg:text-base relative no-underline duration-300 ease-in mb-2 bg-transparent z-10`}
       >
-        <SiderBarLabel tab={tab} key={tab.name} />
+        <SiderBarLabel tab={tab} key={tab.name} isActive={isActive} />
         {isActive && (
-          <motion.span
+          <motion.div
             layoutId="bubble"
-            className="absolute inset-0 rounded-sm z-10 bg-secondary"
+            className="absolute inset-0 rounded-sm z-10 bg-secondary drop-shadow-sm"
             transition={{
               type: "spring",
               bounce: 0.2,
-              duration: 0.6,
+              duration: 0.3,
             }}
           />
         )}
@@ -73,9 +73,9 @@ export function Sidebar({ className, isMobile }: SidebarProps) {
             <nav className="px-3">
               {tabs.map((tab, i) => renderLinkItem(tab, i))}
             </nav>
-            <span className="flex items-center justify-between bottom-0 border-t-2">
+            {/* <span className="flex items-center justify-between px-3 ">
               <ActionBar />
-            </span>
+            </span> */}
           </div>
         </div>
       </div>
@@ -85,15 +85,26 @@ export function Sidebar({ className, isMobile }: SidebarProps) {
 
 const SiderBarLabel = React.memo(function SiderBarLabel({
   tab,
+  isActive,
 }: {
   tab: ITabs;
+  isActive: boolean;
 }) {
+  console.log("rendering", tab.name);
   return (
     <div className="flex z-20 items-center">
       {tab.icon(false, {
-        className: "mr-4",
+        className: `mr-3 ${isActive ? "text-primary" : "text-muted-foreground"}`,
+        size: 20,
       })}
-      {tab.name}
+      <span
+        style={{
+          fontSize: 14,
+        }}
+        className={`${isActive ? "text-primary" : "text-muted-foreground"} font-medium`}
+      >
+        {tab.name}
+      </span>
     </div>
   );
 });

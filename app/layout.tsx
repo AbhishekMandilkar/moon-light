@@ -3,23 +3,18 @@ import React, { useEffect, useState } from "react";
 
 import "./globals.css";
 import ThemeProvider from "@/components/ThemeProvider";
-import { usePathname, useRouter } from "next/navigation";
-import useAuth, { AuthProvider } from "@/contexts/AuthContext";
-import appwriteService from "@/services/appwrite";
-import { Models } from "appwrite";
+import { AuthProvider } from "@/contexts/AuthContext";
+import appwriteService, { LoggedInUser } from "@/services/appwrite";
 import LoginSignUp from "@/components/LoginSignUp/LoginSignUp";
-import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { fontSans } from "./fonts";
-import ThemeToggle from "@/components/Common/ThemeToggle";
 import { Loader2 } from "lucide-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const RootLayout = ({ children }: React.PropsWithChildren) => {
-  const [queryClient] = React.useState(() => new QueryClient());
-  const [authData, setAuthData] =
-    useState<Models.User<Models.Preferences> | null>(null);
+  const [authData, setAuthData] = useState<LoggedInUser>({} as LoggedInUser);
   const [loader, setLoader] = useState(true);
+  const queryClient = new QueryClient();
 
   const checkIfLoggedIn = async () => {
     setLoader(true);
@@ -46,10 +41,10 @@ const RootLayout = ({ children }: React.PropsWithChildren) => {
           enableSystem
           disableTransitionOnChange
         >
-          <AuthProvider
-            value={{ setAuthData: setAuthData, authData: authData }}
-          >
-            <QueryClientProvider client={queryClient}>
+          <QueryClientProvider client={queryClient}>
+            <AuthProvider
+              value={{ setAuthData: setAuthData, authData: authData }}
+            >
               {loader ? (
                 <div className="w-max h-screen mx-auto items-center flex">
                   <Loader2 className="animate-spin" size={50} />
@@ -58,8 +53,8 @@ const RootLayout = ({ children }: React.PropsWithChildren) => {
                 renderMainView()
               )}
               <Toaster position="top-center" />
-            </QueryClientProvider>
-          </AuthProvider>
+            </AuthProvider>
+          </QueryClientProvider>
         </ThemeProvider>
       </body>
     </html>

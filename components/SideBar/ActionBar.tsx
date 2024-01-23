@@ -1,5 +1,5 @@
 "use client";
-import { LogOut, User } from "lucide-react";
+import { LogOut, Settings, User } from "lucide-react";
 import React from "react";
 import ThemeToggle from "../Common/ThemeToggle";
 import { Button } from "../ui/button";
@@ -27,13 +27,14 @@ function ActionBar() {
 
   const actionBarItem = [
     {
-      title: "User",
-      icon: <User />,
+      title: "Settings",
+      icon: <Settings />,
       onPress: () => console.log("User"),
+      extraClassNames: "text-muted-foreground",
     },
     {
       title: "Theme",
-      icon: <ThemeToggle />,
+      icon: <ThemeToggle className="text-muted-foreground hover:text-foreground" />,
     },
     {
       title: "Log Out",
@@ -58,7 +59,7 @@ function ActionBar() {
   };
 
   return (
-    <div className="flex-1 flex self-stretch w-full justify-evenly rounded-md p-2">
+    <div className="flex-1 flex self-stretch w-full justify-evenly rounded-md  bg-secondary p-1">
       {actionBarItem.map((item, index) => (
         <TooltipProvider key={item.title} delayDuration={100}>
           <Tooltip>
@@ -83,10 +84,10 @@ function ActionBar() {
         <AlertDialog open>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogTitle>Log Out?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
+                Are you sure you want to log out? This will end your current
+                session, and you&apos;ll need to sign in again to use your account
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
