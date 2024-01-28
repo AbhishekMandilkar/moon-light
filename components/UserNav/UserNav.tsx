@@ -22,11 +22,13 @@ import {
 import useAuth from "@/contexts/AuthContext";
 import { useTheme } from "next-themes";
 import { getKeyboardShortcuts } from "@/constants/KeyboardShortcuts";
+import { useContext } from "react";
+import { GlobalActionsContext } from "../GlobalActionsWrapper/GlobalActionsWrapper";
 
 enum IActionCode {
-    DarkMode = "darkMode",
-    Settings = "settings",
-    LogOut = "logOut",
+  DarkMode = "darkMode",
+  Settings = "settings",
+  LogOut = "logOut",
 }
 
 export function UserNav() {
@@ -34,20 +36,11 @@ export function UserNav() {
     authData: { name, email },
   } = useAuth();
   const { theme, setTheme, systemTheme } = useTheme();
+  const globalAction = useContext(GlobalActionsContext);
 
-  const onActionClick = (action: IActionCode ) => {
-    switch (action) {
-      case IActionCode.DarkMode:
-        setTheme(theme === "light" ? "dark" : "light");
-        break;
-      case IActionCode.Settings:
-        break;
-      case IActionCode.LogOut:
-        break;
-      default:
-        break;
-    }
-  }
+  const onActionClick = (action: IActionCode) => {
+    globalAction(action);
+  };
 
   const keyboardShortcuts = getKeyboardShortcuts();
 
@@ -63,14 +56,14 @@ export function UserNav() {
       title: "Settings",
       icon: (props: LucideProps) => <Settings {...props} />,
       shortcut: keyboardShortcuts.settings,
-        action: IActionCode.Settings,
+      action: IActionCode.Settings,
     },
     {
-        title: "Log Out",
-        icon: (props: LucideProps) => <LogOut {...props} />,
-        shortcut: keyboardShortcuts.logout,
-            action: IActionCode.LogOut,
-    }
+      title: "Log Out",
+      icon: (props: LucideProps) => <LogOut {...props} />,
+      shortcut: keyboardShortcuts.logout,
+      action: IActionCode.LogOut,
+    },
   ];
 
   return (
@@ -98,9 +91,11 @@ export function UserNav() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup className="py-2">
           {actionBarItem.map((item, index) => (
-            <DropdownMenuItem key={index} className="p-2 cursor-pointer" onClick={
-                () => onActionClick(item.action)
-            }>
+            <DropdownMenuItem
+              key={index}
+              className="p-2 cursor-pointer"
+              onClick={() => onActionClick(item.action)}
+            >
               {item.icon({
                 className: "mr-2",
                 size: 18,

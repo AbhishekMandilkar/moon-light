@@ -5,7 +5,7 @@ import { Sidebar } from "@/components/SideBar/SideBar";
 import useAuth from "@/contexts/AuthContext";
 import { useScreenDetector } from "@/lib/hooks/useScreenDetector";
 import { useRouter } from "next/navigation";
-
+import { motion } from "framer-motion";
 import React, { useState } from "react";
 
 const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
@@ -23,8 +23,10 @@ const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
           />
           <div className="flex-1 overflow-y-scroll">
             <div className="h-full">
-             <AppHeader />
-              <div className=" px-4 py-3 lg:px-8">{children}</div>
+              <AppHeader />
+              <motion.div layout className="px-4 py-3 lg:px-8">
+                {children}
+              </motion.div>
             </div>
           </div>
           {isTablet && (

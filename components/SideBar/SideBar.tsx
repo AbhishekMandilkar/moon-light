@@ -1,21 +1,20 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { Button, buttonVariants } from "../ui/button";
-import { ScrollArea } from "../ui/scroll-area";
 import { ITabs, getAvailableTabs } from "./SideBarUtils";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { usePathname } from "next/navigation";
-import { fontMono } from "@/app/fonts";
-import { Moon, Sun } from "lucide-react";
 import Link from "next/link";
-import { useTheme } from "next-themes";
-import { Tooltip, TooltipProvider } from "../ui/tooltip";
-import { TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
-import ThemeToggle from "../Common/ThemeToggle";
-import ActionBar from "./ActionBar";
-import BrandLogo from "../Common/BrandLogo";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
+import { ChevronsLeft } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
+import { useToggle } from "@uidotdev/usehooks";
+import { Button } from "../ui/button";
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   isMobile?: boolean;
 }
@@ -23,12 +22,12 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 export function Sidebar({ className, isMobile }: SidebarProps) {
   const tabs = useMemo(getAvailableTabs, []);
   const pathName = usePathname();
-
+  const [isSidebarOpen, toggleSidebar] = useToggle(false);
   const isTabActive = (tab: string) => {
     return pathName === tab;
   };
 
-  const renderLinkItem = (tab: ITabs, i: number) => {
+  const renderLinkItem = (tab: ITabs, i: number, expanded: boolean) => {
     const isActive = isTabActive(tab.path);
     return (
       <Link
@@ -37,7 +36,7 @@ export function Sidebar({ className, isMobile }: SidebarProps) {
         passHref
         className={`flex items-center px-3 py-2 rounded-md text-sm lg:text-base relative no-underline duration-300 ease-in mb-2 bg-transparent z-10`}
       >
-        <SiderBarLabel tab={tab} key={tab.name} isActive={isActive} />
+        <SiderBarLabel tab={tab} key={tab.name} isActive={isActive} expanded={expanded} />
         {isActive && (
           <motion.div
             layoutId="bubble"
@@ -57,55 +56,99 @@ export function Sidebar({ className, isMobile }: SidebarProps) {
     return (
       <div className={cn("absolute bottom-0 w-full z-50", className)}>
         <nav className="flex border-2 p-2 justify-evenly">
-          {tabs.map((tab, i) => renderLinkItem(tab, i))}
+          {tabs.map((tab, i) => renderLinkItem(tab, i, false))}
         </nav>
       </div>
     );
 
   return (
-    <div className={cn("", className)}>
-      <div className="space-y-4 pt-4 h-full">
+    <motion.div layout className={cn("", className)}>
+      <div className=" h-full">
         <div className=" py-2 flex flex-col h-full">
-          <span className="flex items-center justify-between pb-4 rounded-md px-3">
-            <BrandLogo />
-          </span>
           <div className="space-y-1 flex flex-col relative flex-1 justify-between">
             <nav className="px-3">
-              {tabs.map((tab, i) => renderLinkItem(tab, i))}
+              {tabs.map((tab, i) => renderLinkItem(tab, i, isSidebarOpen))}
             </nav>
-            {/* <span className="flex items-center justify-between px-3 ">
-              <ActionBar />
-            </span> */}
           </div>
+          <TooltipProvider>
+            <Tooltip delayDuration={100}>
+              <motion.div layout className="px-3 flex justify-center">
+                <TooltipTrigger asChild className="">
+                  <Button variant={"ghost"} onClick={() => toggleSidebar()}>
+                    <motion.div
+                      animate={!isSidebarOpen ? { rotate: 180 } : { rotate: 0 }}
+                      layout
+                    >
+                      {/* <ChevronsLeft size={18} /> */}
+                      <SiderBarLabel 
+                        tab={{ name: "", icon: () => <ChevronsLeft size={18} />, path: "" }}
+                        isActive={false}
+                        expanded={isSidebarOpen}
+                      />
+                    </motion.div>
+                  </Button>
+                </TooltipTrigger>
+              </motion.div>
+              <TooltipContent>
+                <p>{isSidebarOpen ? "Expand" : "Collapse"}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 const SiderBarLabel = React.memo(function SiderBarLabel({
   tab,
   isActive,
+  expanded,
 }: {
   tab: ITabs;
   isActive: boolean;
+  expanded?: boolean;
 }) {
-  console.log("rendering", tab.name);
   return (
-    <div className="flex z-20 items-center">
-      {tab.icon(false, {
-        className: `mr-3 ${isActive ? "text-primary" : "text-muted-foreground"}`,
-        size: 20,
-      })}
-      <span
-        style={{
-          fontSize: 14,
-        }}
-        className={`${isActive ? "text-primary" : "text-muted-foreground"} font-medium`}
-      >
-        {tab.name}
-      </span>
-    </div>
+    <motion.div layout className="flex z-20 items-center justify-center">
+      <motion.div layout layoutId={tab.name}>
+        {tab.icon(false, {
+          className: `${isActive ? "text-primary" : "text-muted-foreground"}`,
+          size: 22,
+        })}
+      </motion.div>
+      {tab.name.length > 0 && (
+        <AnimatePresence>
+          {expanded && (
+            <motion.span
+              key={tab.name}
+              layout
+              exit={{
+                opacity: 0,
+                x: -10,
+              }}
+              initial={{
+                opacity: 0,
+                x: -10,
+              }}
+              animate={{
+                opacity: 1,
+                x: 0,
+              }}
+              style={
+                {
+                  fontSize: 14,
+                }
+              }
+              className={`ml-3 ${
+                isActive ? "text-primary" : "text-muted-foreground"
+              } font-medium`}
+            >
+              {tab.name}
+            </motion.span>
+          )}
+        </AnimatePresence>
+      )}
+    </motion.div>
   );
 });
-

@@ -30,4 +30,5 @@ model tasks {
     updated_at DateTime @updatedAt
     assignee_id               String?   @map("assignee_id") @db.Uuid
     createdby_id               String?   @map("createdby_id") @db.Uuid
+    label    String   
 }

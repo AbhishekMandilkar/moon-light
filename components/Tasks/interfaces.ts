@@ -29,17 +29,17 @@ export enum TaskViewType {
 }
 
 export enum TaskStatus {
-  none = "None",
-  todo = "Todo",
-  inprogress = "In Progress",
-  done = "Done",
+  todo = "todo",
+  inprogress = "in progress",
+  done = "done",
+  backlog = "backlog",
+  canceled = "canceled"
 }
 
 export enum TaskPriority {
-  none = "None",
-  low = "Low",
-  medium = "Medium",
-  high = "High",
+  low = "low",
+  medium = "medium",
+  high = "high",
 }
 
 export type ITask = tasks;

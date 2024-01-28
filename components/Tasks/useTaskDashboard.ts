@@ -1,7 +1,23 @@
-import { useReducer } from "react";
+import { useMemo, useReducer, useState } from "react";
 import { ITask, ITasksConfig, TaskDueBy, TaskViewType } from "./interfaces";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { getTaskList } from "@/api/TaskApi";
+import {
+  ColumnFiltersState,
+  PaginationState,
+  SortingState,
+  Table,
+  VisibilityState,
+  getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { tasks } from "@prisma/client";
+import { getTaskTableColumns } from "./columns";
 
 export interface ITaskDashboardContext {
   taskConfig: ITasksConfig;
@@ -10,6 +26,7 @@ export interface ITaskDashboardContext {
   isLoading: boolean;
   isError: boolean;
   error: any;
+  tableConfig: Table<ITask>;
 }
 
 export enum TaskDispatchAction {
@@ -26,20 +43,88 @@ const useTaskDashboard = (): ITaskDashboardContext => {
   };
 
   const [taskConfig, dispatch] = useReducer(tasksReducer, intialState);
-  const filters = Object.values(taskConfig.filters);
-  console.log("filters", filters);
-  const { data, isLoading, isError, error } = useQuery<ITask[]>({
-    queryFn: () => getTaskList(taskConfig),
-    queryKey: filters,
+
+  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
   });
 
-  console.log("data", taskConfig);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
+
+  const { data, isLoading, isError, error, isRefetching } = useQuery<{
+    tasks: ITask[];
+    totalCount: number;
+  }>({
+    queryFn: () =>
+      getTaskList({
+        filters: columnFilters,
+        pagination: {
+          pageIndex,
+          pageSize,
+        },
+      }),
+    queryKey: [columnFilters, pageIndex, pageSize],
+  });
+
+  const emptyArray = useMemo(() => [], []);
+
+  const dummyArray = useMemo(() => {
+    return new Array(pageSize).fill({
+      id: "",
+      title: "",
+      description: "",
+      status: "",
+      priority: "",
+      dueDate: "",
+      createdAt: "",
+      updatedAt: "",
+    });
+  }
+  , [pageSize]);
+
+  const getData = () => {
+    if (isLoading || isRefetching) {
+      return dummyArray;
+    };
+    return data?.tasks && data?.tasks?.length > 0 ? data?.tasks  : dummyArray;
+  }
+
+  const tableConfig = useReactTable({
+    data: getData(),
+    columns: getTaskTableColumns(isLoading || isRefetching),
+    state: {
+      sorting,
+      columnVisibility,
+      columnFilters,
+      pagination: {
+        pageIndex,
+        pageSize,
+      }
+    },
+    enableRowSelection: true,
+    manualPagination: true,
+    manualFiltering: true,
+    pageCount: Math.ceil((data?.totalCount || 0) / pageSize),
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    onPaginationChange: setPagination,
+  });
 
   return {
+    tableConfig,
     taskConfig,
     dispatch,
-    taskList: data || [],
-    isLoading,
+    taskList: data?.tasks || [],
+    isLoading: isLoading || isRefetching,
     isError,
     error,
   };
@@ -74,5 +159,4 @@ export function tasksReducer(
         ...action.payload,
       };
   }
-
 }
