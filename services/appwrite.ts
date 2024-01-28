@@ -60,25 +60,9 @@ export class AppwriteService {
 
   async isLoggedIn(): Promise<LoggedInUser | null> {
     try {
-      // const data = await this.getCurrentUser();
-      const data = {
-        $id: "65abc92ea14f94be38ab",
-        $createdAt: "2024-01-20T13:22:54.662+00:00",
-        $updatedAt: "2024-01-20T13:22:54.662+00:00",
-        name: "@peduarte",
-        registration: "2024-01-20T13:22:54.660+00:00",
-        status: true,
-        labels: [],
-        passwordUpdate: "2024-01-20T13:22:54.660+00:00",
-        email: "abhi123@gmail.com",
-        phone: "",
-        emailVerification: false,
-        phoneVerification: false,
-        prefs: {},
-        accessedAt: "2024-01-20T13:22:54.660+00:00",
-      };
+      const data = await this.getCurrentUser();
       const userData = await axios.get<LoggedInUser>(
-        `/api/user?id=${data.$id}`
+        `/api/user?id=${data?.$id}`
       );
       return userData.data;
     } catch (error) {
