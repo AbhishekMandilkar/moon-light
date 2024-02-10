@@ -1,10 +1,12 @@
 "use client";
 import { getKeyboardShortcuts } from "@/constants/KeyboardShortcuts";
-import useAuth from "@/contexts/AuthContext";
 import { useTheme } from "next-themes";
 import React, { ReactNode } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import Settings from "../Settings/Settings";
+import { useClerk } from "@clerk/nextjs";
+import { useToggle } from "@uidotdev/usehooks";
+import ConfirmLogout from "../ConfirmLogout/ConfirmLogout";
 
 interface Props {
   children: ReactNode;
@@ -23,12 +25,10 @@ export const GlobalActionsContext = React.createContext(
 const GlobalActionsProvider = GlobalActionsContext.Provider;
 
 function GlobalActionsWrapper({ children }: Props) {
-  const {
-    authData: { name, email },
-  } = useAuth();
   const { theme, setTheme, systemTheme } = useTheme();
   const keyboardShortcuts = getKeyboardShortcuts();
-  const [showSettings, setShowSettings] = React.useState(false);
+  const [showSettings, setShowSettings] = useToggle(false);
+  const [confirmLogout, setConfirmLogout] = useToggle(false);
 
   const onActionClick = (action: IActionCode) => {
     switch (action) {
@@ -39,6 +39,7 @@ function GlobalActionsWrapper({ children }: Props) {
         setShowSettings(!showSettings);
         break;
       case IActionCode.LogOut:
+        setConfirmLogout(true);
         break;
       default:
         break;
@@ -60,6 +61,11 @@ function GlobalActionsWrapper({ children }: Props) {
         open={showSettings}
         onOpenChange={(open) => setShowSettings(open)}
       />
+      {confirmLogout && (
+        <ConfirmLogout
+          onCancel={() => setConfirmLogout(false)}
+        />
+      )}
     </GlobalActionsProvider>
   );
 }

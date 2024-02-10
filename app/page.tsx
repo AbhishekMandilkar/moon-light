@@ -1,10 +1,9 @@
 "use client";
+import AppHome from "@/components/AppHome/AppHome";
 import { useRouter } from "next/navigation";
 
 const Page = () => {
-  const router = useRouter();
-  router.replace('/tasks')
-  return <></>;
+  return <AppHome />;
 };
 
 export default Page;

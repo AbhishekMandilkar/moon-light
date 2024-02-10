@@ -36,7 +36,12 @@ export function Sidebar({ className, isMobile }: SidebarProps) {
         passHref
         className={`flex items-center px-3 py-2 rounded-md text-sm lg:text-base relative no-underline duration-300 ease-in mb-2 bg-transparent z-10`}
       >
-        <SiderBarLabel tab={tab} key={tab.name} isActive={isActive} expanded={expanded} />
+        <SiderBarLabel
+          tab={tab}
+          key={tab.name}
+          isActive={isActive}
+          expanded={expanded}
+        />
         {isActive && (
           <motion.div
             layoutId="bubble"
@@ -80,8 +85,12 @@ export function Sidebar({ className, isMobile }: SidebarProps) {
                       layout
                     >
                       {/* <ChevronsLeft size={18} /> */}
-                      <SiderBarLabel 
-                        tab={{ name: "", icon: () => <ChevronsLeft size={18} />, path: "" }}
+                      <SiderBarLabel
+                        tab={{
+                          name: "",
+                          icon: () => <ChevronsLeft size={18} />,
+                          path: "",
+                        }}
                         isActive={false}
                         expanded={isSidebarOpen}
                       />
@@ -110,45 +119,45 @@ const SiderBarLabel = React.memo(function SiderBarLabel({
   expanded?: boolean;
 }) {
   return (
-    <motion.div layout className="flex z-20 items-center justify-center">
-      <motion.div layout layoutId={tab.name}>
-        {tab.icon(false, {
-          className: `${isActive ? "text-primary" : "text-muted-foreground"}`,
-          size: 22,
-        })}
-      </motion.div>
-      {tab.name.length > 0 && (
-        <AnimatePresence>
-          {expanded && (
-            <motion.span
-              key={tab.name}
-              layout
-              exit={{
-                opacity: 0,
-                x: -10,
-              }}
-              initial={{
-                opacity: 0,
-                x: -10,
-              }}
-              animate={{
-                opacity: 1,
-                x: 0,
-              }}
-              style={
-                {
+    <AnimatePresence>
+      <motion.div layout className="flex z-20 items-center justify-center">
+        <motion.div layout layoutId={tab.name}>
+          {tab.icon(false, {
+            className: `${isActive ? "text-primary" : "text-muted-foreground"}`,
+            size: 22,
+          })}
+        </motion.div>
+        {tab.name.length > 0 && (
+          <AnimatePresence>
+            {expanded && (
+              <motion.span
+                key={tab.name}
+                layout
+                exit={{
+                  opacity: 0,
+                  x: -10,
+                }}
+                initial={{
+                  opacity: 0,
+                  x: -10,
+                }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                }}
+                style={{
                   fontSize: 14,
-                }
-              }
-              className={`ml-3 ${
-                isActive ? "text-primary" : "text-muted-foreground"
-              } font-medium`}
-            >
-              {tab.name}
-            </motion.span>
-          )}
-        </AnimatePresence>
-      )}
-    </motion.div>
+                }}
+                className={`ml-3 ${
+                  isActive ? "text-primary" : "text-muted-foreground"
+                } font-medium`}
+              >
+                {tab.name}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        )}
+      </motion.div>
+    </AnimatePresence>
   );
 });

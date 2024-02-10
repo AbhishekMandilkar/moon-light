@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import React, { useContext } from "react";
 import { TasksContext } from "../context/TasksContext";
-import { AuthContext } from "@/contexts/AuthContext";
 import { ITaskDashboardContext } from "../useTaskDashboard";
 import { Input } from "@/components/ui/input";
 import { TaskFilterItem } from "./TaskFilterItem";
@@ -12,15 +11,11 @@ import { CrossIcon } from "lucide-react";
 function TaskHeader() {
   const { taskConfig, dispatch, taskList, isError, isLoading, tableConfig } =
     useContext(TasksContext);
-  const contextData = useContext(AuthContext);
   const isFiltered = tableConfig.getState().columnFilters.length > 0;
   const [value, setValue] = React.useState(
     (tableConfig.getColumn("title")?.getFilterValue() as string) ?? ""
   );
 
-  const {
-    authData: { name, uuid },
-  } = contextData;
 
   React.useEffect(() => {
     const timeout = setTimeout(() => {

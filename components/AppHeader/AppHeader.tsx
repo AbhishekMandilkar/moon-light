@@ -2,6 +2,7 @@ import React from "react";
 import { UserNav } from "../UserNav/UserNav";
 import { GlobalSearch } from "../GlobalSearch/GlobalSearch";
 import BrandLogo from "../Common/BrandLogo";
+import { UserButton } from "@clerk/nextjs";
 
 function AppHeader() {
   return (

@@ -5,7 +5,7 @@ import ThemeToggle from "../Common/ThemeToggle";
 import { Button } from "../ui/button";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import appwriteService from "@/services/appwrite";
+// import appwriteService from "@/services/appwrite";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -44,19 +44,19 @@ function ActionBar() {
     },
   ];
 
-  const handlelogout = async () => {
-    setLogoutLoader(true);
-    try {
-      await appwriteService.logout();
-      setLogoutLoader(false);
-      toast.success("Logged out successfully");
-      window.location.reload();
-    } catch (error) {
-      setLogoutLoader(false);
-      toast.error("Something went wrong");
-      console.log(error);
-    }
-  };
+  // const handlelogout = async () => {
+  //   setLogoutLoader(true);
+  //   try {
+  //     await appwriteService.logout();
+  //     setLogoutLoader(false);
+  //     toast.success("Logged out successfully");
+  //     window.location.reload();
+  //   } catch (error) {
+  //     setLogoutLoader(false);
+  //     toast.error("Something went wrong");
+  //     console.log(error);
+  //   }
+  // };
 
   return (
     <div className="flex-1 flex self-stretch w-full justify-evenly rounded-md  bg-secondary p-1">
@@ -80,27 +80,7 @@ function ActionBar() {
           </Tooltip>
         </TooltipProvider>
       ))}
-      {confirmLogout && (
-        <AlertDialog open>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Log Out?</AlertDialogTitle>
-              <AlertDialogDescription>
-                Are you sure you want to log out? This will end your current
-                session, and you&apos;ll need to sign in again to use your account
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel onClick={() => setConfirmLogout(false)}>
-                Cancel
-              </AlertDialogCancel>
-              <AlertDialogAction onClick={() => handlelogout()}>
-                {logoutLoader ? "Loading..." : "Logout"}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      )}
+     
     </div>
   );
 }

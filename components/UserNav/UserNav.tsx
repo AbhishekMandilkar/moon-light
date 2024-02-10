@@ -19,11 +19,11 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import useAuth from "@/contexts/AuthContext";
 import { useTheme } from "next-themes";
 import { getKeyboardShortcuts } from "@/constants/KeyboardShortcuts";
 import { useContext } from "react";
 import { GlobalActionsContext } from "../GlobalActionsWrapper/GlobalActionsWrapper";
+import { useUser } from "@clerk/nextjs";
 
 enum IActionCode {
   DarkMode = "darkMode",
@@ -32,9 +32,7 @@ enum IActionCode {
 }
 
 export function UserNav() {
-  const {
-    authData: { name, email },
-  } = useAuth();
+  const { isLoaded, user, isSignedIn } = useUser();
   const { theme, setTheme, systemTheme } = useTheme();
   const globalAction = useContext(GlobalActionsContext);
 
@@ -59,6 +57,7 @@ export function UserNav() {
       action: IActionCode.Settings,
     },
     {
+      hide: !isSignedIn,
       title: "Log Out",
       icon: (props: LucideProps) => <LogOut {...props} />,
       shortcut: keyboardShortcuts.logout,
@@ -66,46 +65,67 @@ export function UserNav() {
     },
   ];
 
+  if (!isLoaded) {
+    return null;
+  }
+
+  const name = user?.fullName ?? "";
+  const email = user?.emailAddresses?.[0]?.emailAddress ?? "";
+  console.log(user);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div className="flex items-center">
           <Avatar className="h-8 w-8 mr-2">
-            <AvatarImage src="/avatars/01.png" alt="@shadcn" />
-            <AvatarFallback>
-              <span>{name?.charAt(0)}</span>
-            </AvatarFallback>
+            <AvatarImage
+              src={
+                user?.imageUrl ??
+                "https://avatars.githubusercontent.com/u/1066040?s=60&v=4"
+              }
+              alt={name}
+            />
+            {name.length && (
+              <AvatarFallback>
+                <span>{name?.charAt(0).toUpperCase() ?? undefined}</span>
+              </AvatarFallback>
+            )}
           </Avatar>
           <ChevronDown />
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-64 p-2" align="end" forceMount>
-        <DropdownMenuLabel className="font-normal py-2">
-          <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{name}</p>
-            <p className="text-xs leading-none text-muted-foreground">
-              {email}
-            </p>
-          </div>
-        </DropdownMenuLabel>
+        {name.length && email.length && (
+          <DropdownMenuLabel className="font-normal py-2">
+            <div className="flex flex-col space-y-1">
+              <p className="text-sm font-medium leading-none">{name}</p>
+              <p className="text-xs leading-none text-muted-foreground">
+                {email}
+              </p>
+            </div>
+          </DropdownMenuLabel>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuGroup className="py-2">
-          {actionBarItem.map((item, index) => (
-            <DropdownMenuItem
-              key={index}
-              className="p-2 cursor-pointer"
-              onClick={() => onActionClick(item.action)}
-            >
-              {item.icon({
-                className: "mr-2",
-                size: 18,
-              })}
-              {item.title}
-              {item.shortcut && (
-                <DropdownMenuShortcut>{item.shortcut}</DropdownMenuShortcut>
-              )}
-            </DropdownMenuItem>
-          ))}
+          {actionBarItem.map((item, index) => {
+            if (item?.hide) return null;
+            return (
+              <DropdownMenuItem
+                key={index}
+                className="p-2 cursor-pointer"
+                onClick={() => onActionClick(item.action)}
+              >
+                {item.icon({
+                  className: "mr-2",
+                  size: 18,
+                })}
+                {item.title}
+                {item.shortcut && (
+                  <DropdownMenuShortcut>{item.shortcut}</DropdownMenuShortcut>
+                )}
+              </DropdownMenuItem>
+            );
+          })}
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

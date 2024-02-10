@@ -30,11 +30,13 @@ export async function POST(request: Request) {
 }
 export async function GET(request: NextRequest) {
   const data = await request.nextUrl.searchParams.get("id");
-  if (!data)
+  console.log(data);
+  if (!data?.length){
     return NextResponse.json(
       { message: "No data", success: false },
       { status: 500 }
     );
+  }
   try {
     const response = await prisma.users.findUnique({
       where: {

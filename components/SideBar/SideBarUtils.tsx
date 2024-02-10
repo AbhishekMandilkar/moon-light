@@ -14,17 +14,17 @@ export interface ITabs {
 export const getAvailableTabs = () => {
   const tabList: ITabs[] = [];
   tabList.push({
-    path: "/tasks",
+    path: "/app/tasks",
     name: "Tasks",
     icon: (isActive, props) => <ListChecks {...props} />,
   });
   tabList.push({
-    path: "/goals",
+    path: "/app/goals",
     name: "Goals",
     icon: (isActive, props) => <Goal {...props} />,
   });
   tabList.push({
-    path: "/projects",
+    path: "/app/projects",
     name: "Projects",
     icon: (isActive, props) => <FolderOpenDot {...props} />,
   });
