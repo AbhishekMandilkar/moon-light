@@ -22,3 +22,8 @@ export const seedTasks = () => {
   const response = axios.get("/api/tasks");
   return response.then((res) => res.data);
 }
+
+export const getTaskById = (id: number) => {
+  const response = axios.get(`/api/tasks/${id}`);
+  return response.then((res) => res.data);
+}

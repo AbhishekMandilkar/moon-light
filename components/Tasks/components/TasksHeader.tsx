@@ -6,10 +6,11 @@ import { Input } from "@/components/ui/input";
 import { TaskFilterItem } from "./TaskFilterItem";
 import { TaskPriorityList, TaskStatusList } from "../TaskHelpers";
 import { Button } from "@/components/ui/button";
-import { CrossIcon } from "lucide-react";
+import { CrossIcon, PlusIcon, XIcon } from "lucide-react";
+import { TaskTablePagination } from "./TaskTablePagination";
 
 function TaskHeader() {
-  const { taskConfig, dispatch, taskList, isError, isLoading, tableConfig } =
+  const { taskConfig, dispatch, taskList, isError, isLoading, tableConfig, handleToggleAddTask, showAddTask } =
     useContext(TasksContext);
   const isFiltered = tableConfig.getState().columnFilters.length > 0;
   const [value, setValue] = React.useState(
@@ -35,15 +36,15 @@ function TaskHeader() {
         opacity: 1,
         y: 0,
       }}
-      className="flex items-center justify-between"
+      className="flex items-center justify-between p-2 shadow-lg rounded-full m-2"
     >
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between w-full">
         <div className="flex flex-1 items-center space-x-2">
           <Input
-            placeholder="Filter tasks..."
+            placeholder="Search tasks..."
             value={value}
             onChange={(event) => setValue(event.target.value)}
-            className="h-8 w-[150px] lg:w-[250px]"
+            className="w-[150px] lg:w-[250px] rounded-full "
           />
           {tableConfig.getColumn("status") && (
             <TaskFilterItem
@@ -70,7 +71,17 @@ function TaskHeader() {
             </Button>
           )}
         </div>
-        {/* <DataTableViewOptions table={tableConfig} /> */}
+        
+        <Button onClick={() => handleToggleAddTask(!showAddTask)} className="rounded-full">
+          {showAddTask ? (
+            <XIcon className="h-4 w-4" />
+          ) : (
+            <>
+              <PlusIcon className="h-4 w-4 mr-2" />
+              <span className="hidden lg:block">Add Task</span>
+            </>
+          )}
+        </Button>
       </div>
     </motion.div>
   );

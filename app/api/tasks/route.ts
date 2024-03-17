@@ -57,7 +57,6 @@ export async function POST(request: Request) {
     }
     return acc;
   }, {} as any);
-  console.log(where);
   try {
 
    const data = await prisma.$transaction([
@@ -82,22 +81,6 @@ export async function POST(request: Request) {
       }),
     ])
 
-    // const data = await prisma.tasks.findMany({
-    //   where: where,
-    //   select: {
-    //     id: true,
-    //     title: true,
-    //     description: true,
-    //     status: true,
-    //     priority: true,
-    //     created_at: true,
-    //     updated_at: true,
-    //     uuid: true,
-    //     label: true,
-    //   },
-    //   skip: pagination.pageIndex * pagination.pageSize,
-    //   take: pagination.pageSize,
-    // });
     return NextResponse.json({
       tasks: data[0],
       totalCount: data[1],
@@ -108,3 +91,4 @@ export async function POST(request: Request) {
   }
   
 }
+

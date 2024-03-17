@@ -13,16 +13,28 @@ import {
 import { flexRender } from "@tanstack/react-table";
 import { getTaskTableColumns } from "../columns";
 import { motion } from "framer-motion";
+import { TaskTablePagination } from "./TaskTablePagination";
+import { usePathname, useRouter } from "next/navigation";
 function TaskList() {
   const { isLoading, tableConfig } = useContext(TasksContext);
   const taskTableColumns = getTaskTableColumns(isLoading);
+  const router = useRouter();
+  const pathname = usePathname()
+  const onRowClick = (taskId: number) => {
+    router.push(pathname + '?' + new URLSearchParams({ task: taskId.toString() }).toString())
+  }
 
   const renderTableBody = () => {
     if (tableConfig.getRowModel().rows?.length) {
       return tableConfig.getRowModel().rows.map((row) => (
-        <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+        <TableRow
+          key={row.id}
+          data-state={row.getIsSelected() && "selected"}
+          className="border-0 my-0"
+          onClick={() => onRowClick(row?.original?.id)}
+        >
           {row.getVisibleCells().map((cell) => (
-            <TableCell key={cell.id}>
+            <TableCell key={cell.id} className="p-3">
               {flexRender(cell.column.columnDef.cell, cell.getContext())}
             </TableCell>
           ))}
@@ -35,7 +47,7 @@ function TaskList() {
             colSpan={taskTableColumns.length}
             className="h-24 text-center"
           >
-            No results 123.
+            No results.
           </TableCell>
         </TableRow>
       );
@@ -43,11 +55,11 @@ function TaskList() {
   };
 
   return (
-    <motion.div layout>
+    <motion.div className="max-h-full overflow-auto scrollbar">
       <Table>
         <TableHeader>
           {tableConfig.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id} className="" >
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead key={header.id} colSpan={header.colSpan}>
@@ -55,7 +67,7 @@ function TaskList() {
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 );
@@ -63,7 +75,7 @@ function TaskList() {
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody>{renderTableBody()}</TableBody>
+        <TableBody className="max-h-full">{renderTableBody()}</TableBody>
       </Table>
     </motion.div>
   );

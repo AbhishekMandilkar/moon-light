@@ -1,4 +1,4 @@
-import { useMemo, useReducer, useState } from "react";
+import { useEffect, useMemo, useReducer, useState } from "react";
 import { ITask, ITasksConfig, TaskDueBy, TaskViewType } from "./interfaces";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { getTaskList } from "@/api/TaskApi";
@@ -18,6 +18,8 @@ import {
 } from "@tanstack/react-table";
 import { tasks } from "@prisma/client";
 import { getTaskTableColumns } from "./columns";
+import { useToggle } from "@uidotdev/usehooks";
+import { useSearchParams } from "next/navigation";
 
 export interface ITaskDashboardContext {
   taskConfig: ITasksConfig;
@@ -27,6 +29,8 @@ export interface ITaskDashboardContext {
   isError: boolean;
   error: any;
   tableConfig: Table<ITask>;
+  showAddTask: boolean;
+  handleToggleAddTask: (toggle: boolean) => void;
 }
 
 export enum TaskDispatchAction {
@@ -42,11 +46,17 @@ const useTaskDashboard = (): ITaskDashboardContext => {
     },
   };
 
-  const [taskConfig, dispatch] = useReducer(tasksReducer, intialState);
+  const searchParams = useSearchParams();
 
+  const selectedTask = searchParams.get("task");
+
+
+
+  const [taskConfig, dispatch] = useReducer(tasksReducer, intialState);
+  const [showAddTask, setShowAddTask] = useToggle(!!selectedTask ? true : false);
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 10,
+    pageSize: 15,
   });
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -62,13 +72,20 @@ const useTaskDashboard = (): ITaskDashboardContext => {
         filters: columnFilters,
         pagination: {
           pageIndex,
-          pageSize,
+          pageSize: 15,
         },
       }),
     queryKey: [columnFilters, pageIndex, pageSize],
   });
 
   const emptyArray = useMemo(() => [], []);
+
+  useEffect(() => {
+    if (selectedTask) {
+      setShowAddTask(true);
+    }
+  }
+  , [selectedTask, setShowAddTask]);
 
   const dummyArray = useMemo(() => {
     return new Array(pageSize).fill({
@@ -119,7 +136,14 @@ const useTaskDashboard = (): ITaskDashboardContext => {
     onPaginationChange: setPagination,
   });
 
+  const handleToggleAddTask = (toggle: boolean) => {
+    console.log("handleToggleAddTask", toggle);
+    setShowAddTask(toggle);
+  };
+
   return {
+    handleToggleAddTask,
+    showAddTask,
     tableConfig,
     taskConfig,
     dispatch,

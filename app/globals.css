@@ -3,6 +3,12 @@
 @tailwind utilities;
 
 
+html {
+  max-height: 100vh !important;
+}
+
+
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -49,6 +55,30 @@
     --ring: 240 4.9% 83.9%;
   }
 }
+
+@layer utilities {
+  .scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height:10px;
+    }
+    
+    .scrollbar::-webkit-scrollbar-track {
+      border-radius: 100vh;
+      background: transparent;
+      width: 10px;
+    }
+    
+    .scrollbar::-webkit-scrollbar-thumb {
+      border-radius: 100vh;
+      border: 10px solid var(--border);
+      width: 10px;
+    }
+    
+    .scrollbar::-webkit-scrollbar-thumb:hover {
+      background:#f6f7ed;
+  }
+}
+
 
  
 @layer base {

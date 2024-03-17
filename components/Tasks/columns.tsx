@@ -13,6 +13,7 @@ import {
 } from "./TaskHelpers";
 import { TaskPriority, TaskStatus } from "./interfaces";
 import { Skeleton } from "../ui/skeleton";
+import TaskCell from "./components/TaskCell";
 
 export const getTaskTableColumns = (isLoading: boolean): ColumnDef<tasks>[] => [
   //   {
@@ -37,16 +38,17 @@ export const getTaskTableColumns = (isLoading: boolean): ColumnDef<tasks>[] => [
       <TaskTableColumnHeader column={column} title="key" />
     ),
     cell: ({ row }) => {
-      if (isLoading) return <Skeleton className="h-5 max-w-[25px]" />;
-
       return (
-        <div className="flex items-center max-w-[25px] ">
-          <span>{row.getValue("id")}</span>
-        </div>
+        <TaskCell isLoading={isLoading}>
+          <div className="flex items-center w-[10px] ">
+            <span>{row.getValue("id")}</span>
+          </div>
+        </TaskCell>
       );
     },
     enableSorting: false,
     enableHiding: false,
+    
   },
   {
     accessorKey: "title",
@@ -54,19 +56,14 @@ export const getTaskTableColumns = (isLoading: boolean): ColumnDef<tasks>[] => [
       <TaskTableColumnHeader column={column} title="Title" />
     ),
     cell: ({ row }) => {
-      if (isLoading) return <Skeleton className="h-4 w-[400px]" />;
-
-      const isCompleted = row.getValue("status") === TaskStatus.done;
       return (
-        <div className="flex space-x-2">
-          <span
-            className={`max-w-[500px] truncate font-medium ${
-              isCompleted ? "line-through" : ""
-            }`}
-          >
-            {row.getValue("title")}
-          </span>
-        </div>
+        <TaskCell isLoading={isLoading}>
+          <div className="flex space-x-2">
+            <span className={`truncate font-medium `}>
+              {row.getValue("title")}
+            </span>
+          </div>
+        </TaskCell>
       );
     },
   },
@@ -76,27 +73,20 @@ export const getTaskTableColumns = (isLoading: boolean): ColumnDef<tasks>[] => [
       <TaskTableColumnHeader column={column} title="Status" />
     ),
     cell: ({ row }) => {
-      if (isLoading) return <Skeleton className="h-4 w-[100px]"/>;
 
       const statusValue: TaskStatus = row.getValue("status");
       const status = TaskStatusMap[statusValue];
+
       return (
-        <div
-          className={` flex items-center ${getTaskStatusClassNames(
-            statusValue
-          )}`}
-        >
-          <>
-            {status?.icon && (
-              <status.icon
-                className={`mr-2 h-4 w-4 text-muted-foreground ${getTaskStatusClassNames(
-                  statusValue
-                )}`}
-              />
-            )}
-            <span>{status?.label}</span>
-          </>
-        </div>
+        <TaskCell isLoading={isLoading}>
+          <div className="flex items-center">
+            <Badge
+              className={`${getTaskStatusClassNames(statusValue)} text-xs truncate`}
+            >
+              {status?.label}
+            </Badge>
+          </div>
+        </TaskCell>
       );
     },
     filterFn: (row, id, value) => {
@@ -109,29 +99,24 @@ export const getTaskTableColumns = (isLoading: boolean): ColumnDef<tasks>[] => [
       <TaskTableColumnHeader column={column} title="Priority" />
     ),
     cell: ({ row }) => {
-      if (isLoading) return <Skeleton className="h-4 w-[100px]"/>;
-
       const priorityValue: TaskPriority = row.getValue("priority");
       const priority = TaskPriorityMap[priorityValue];
-
       return (
-        <div className="flex items-center">
-          <div
-            className={`mr-2 w-2 h-2 rounded-full bg-slate-400 ${getTaskPriorityClassNames(
-              priorityValue
-            )}`}
-          />
-          <span>{priority?.label}</span>
-        </div>
+        <TaskCell isLoading={isLoading}>
+          <div className="flex items-center">
+            <div
+              className={`mr-2 w-2 h-2 rounded-full ${getTaskPriorityClassNames(
+                priorityValue
+              )}`}
+            />
+            <span>{priority?.label}</span>
+          </div>
+        </TaskCell>
       );
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     },
   },
-  
-  // {
-  //   id: "actions",
-  //   cell: ({ row }) => <DeleteIcon />,
-  // },
+
 ];

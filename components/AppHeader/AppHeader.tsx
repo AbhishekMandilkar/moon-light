@@ -6,7 +6,7 @@ import { UserButton } from "@clerk/nextjs";
 
 function AppHeader() {
   return (
-    <div className="flex justify-end h-16 p-3">
+    <div className="flex justify-end h-16 p-3 border-b-2">
       <BrandLogo />
       <div className="flex flex-1" />
       <UserNav />
