@@ -9,10 +9,10 @@ import useTaskDashboard from "./useTaskDashboard";
 import TaskHeader from "./components/TasksHeader";
 import { TaskTablePagination } from "./components/TaskTablePagination";
 import { AnimatePresence, motion } from "framer-motion";
-import AddOrUpdateTask from "../AddOrUpdateTask/AddOrUpdateTask";
+import AddOrUpdateTask from "../../AddOrUpdateTask/AddOrUpdateTask";
 import {  ResizableHandle,
   ResizablePanel,
-  ResizablePanelGroup, } from "../ui/resizable";
+  ResizablePanelGroup, } from "../../ui/resizable";
 
 
 function Tasks() {

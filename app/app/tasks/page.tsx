@@ -1,4 +1,4 @@
-import Todos from "@/components/Tasks/Tasks";
+import Todos from "@/components/Screens/Tasks/Tasks";
 
 import React from "react";
 

@@ -1,4 +1,4 @@
-import { ITask, ITasksConfig } from "@/components/Tasks/interfaces";
+import { ITask, ITasksConfig } from "@/components/Screens/Tasks/interfaces";
 import { ColumnFiltersState, PaginationState } from "@tanstack/react-table";
 import axios from "axios";
 

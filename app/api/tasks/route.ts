@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { PrismaClient, tasks } from "@prisma/client";
-import { ITask, TaskStatus } from "@/components/Tasks/interfaces";
+import { ITask, TaskStatus } from "@/components/Screens/Tasks/interfaces";
 import {
   Column,
   ColumnFiltersState,

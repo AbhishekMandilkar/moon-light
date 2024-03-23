@@ -5,7 +5,7 @@ import { DrawerContent } from "../ui/drawer";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import { DialogContent } from "@radix-ui/react-dialog";
 import { useQuery } from "@tanstack/react-query";
-import { ITask } from "../Tasks/interfaces";
+import { ITask } from "../Screens/Tasks/interfaces";
 import { getTaskById } from "@/api/TaskApi";
 import { useSearchParams } from "next/navigation";
 import { Skeleton } from "../ui/skeleton";

@@ -2,7 +2,7 @@
 
 import { tasks } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { Badge } from "../ui/badge";
+import { Badge } from "../../ui/badge";
 import { DeleteIcon } from "lucide-react";
 import { TaskTableColumnHeader } from "./components/TaskTableColumnHeader";
 import {
@@ -12,7 +12,7 @@ import {
   getTaskStatusClassNames,
 } from "./TaskHelpers";
 import { TaskPriority, TaskStatus } from "./interfaces";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "../../ui/skeleton";
 import TaskCell from "./components/TaskCell";
 
 export const getTaskTableColumns = (isLoading: boolean): ColumnDef<tasks>[] => [
