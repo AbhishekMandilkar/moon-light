@@ -42,7 +42,7 @@ const AppHome: React.FC = () => {
   return (
     <>
       <div className="container relative h-screen flex flex-col items-center justify-center transition-all ease-in duration-200">
-        <span className="absolute left-4 top-4 md:left-8 md:top-8">
+        <span className="absolute left-4 top-8 md:left-8 md:top-8">
           <BrandLogo />
         </span>
         <span className="absolute right-4 top-4 md:right-8 md:top-8 flex items-center">
